@@ -1,0 +1,191 @@
+<html>
+<link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<link rel = "stylesheet"  href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+<script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+
+<style>
+    #drop
+    {
+
+        margin-top:5%;
+        margin-left:auto;
+        margin-right:auto;
+        width : 20%;
+    }
+    #drop_list
+    {
+        padding: 10px 20px 50px 30px;
+
+    }
+</style>
+<body>
+<div id = "drop">
+    <ul id = "dropdown" class = "dropdown-content" >
+        <li><a href = "#" onclick = filter("1Mtech")>MTech</a></li>
+        <li><a href = "#" onclick = filter("1iMtech")>iMTech</a></li>
+        <li><a href = "#" onclick = filter("1MS") >MS</a></li>
+        <li class = "divider"></li>
+        <li><a href = "#" onclick = filter("2cse")>CSE</a></li>
+        <li><a href = "#" onclick = filter("2civil")>CIVIL</a></li>
+        <li><a href = "#" onclick = filter("2ece") >ECE</a></li>
+        <li><a href = "#" onclick = filter("2eee") >EEE</a></li>
+        <li class = "divider"></li>
+        <li><a href = "#" onclick = filter("3ds")>Data_science</a></li>
+        <li><a href = "#" onclick = filter("3sp")>signal_processing</a></li>
+        <li><a href = "#" onclick = filter("3cs")>theory_and_systems</a></li>
+
+    </ul>
+
+    <a class = "btn dropdown-button" id = "drop_list"  href = "#" data-activates = "dropdown"> Filter
+        <i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
+</div>
+<div style="display:block" id="studentlist1div">
+    <table class = "responsive-table striped" id = "studentlist1">
+        <thead>
+        <tr>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>rollNo</th>
+            <th>Discipline</th>
+            <th>Branch</th>
+            <th>Specialization</th>
+        </tr>
+        </thead>
+
+        <tbody  id = "studentlist1-tbody">
+
+        </tbody>
+    </table>
+</div>
+<div style="display:none" id="studentlist2div">
+    <table class = "responsive-table striped" id = "studentlist2">
+        <thead>
+        <tr>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>rollNo</th>
+            <th>Discipline</th>
+            <th>Branch</th>
+            <th>Specialization</th>
+        </tr>
+        </thead>
+
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+</div>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.dropdown-trigger');
+        var instances = M.Dropdown.init(elems, options);
+    });
+
+    // Or with jQuery
+
+    $('.dropdown-trigger').dropdown();
+
+
+</script>
+
+<script>
+    function filter(domain) {
+        document.getElementById("studentlist1div").style.display = "none";
+        document.getElementById("studentlist2div").style.display = "block";
+
+        var tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "<tr></tr>";
+        console.log(domain[0]);
+        var word = domain.substring(1);
+        if (domain[0] == 1) {
+
+            var table = document.getElementById("studentlist1");
+            for (var r = 1, n = table.rows.length; r < n; r++) {
+
+                var hide = table.rows[r].cells[3].innerHTML;
+                if (word == hide) {
+                    var newrow = tbody.insertRow();
+                    var str = "<tr>";
+                    for (var c = 0, m = table.rows[r].cells.length; c < m; c++) {
+                        str = str + "<td>" + table.rows[r].cells[c].innerHTML + "</td>";
+                    }
+                    str = str + "</tr>";
+                    newrow.innerHTML = str;
+                }
+
+            }
+        } else if (domain[0] == 2) {
+            var table = document.getElementById("studentlist1");
+            for (var r = 0, n = table.rows.length; r < n; r++) {
+
+                var hide = table.rows[r].cells[4].innerHTML;
+                if (word == hide) {
+                    var newrow = tbody.insertRow();
+                    var str = "<tr>";
+                    for (var c = 0, m = table.rows[r].cells.length; c < m; c++) {
+                        str = str + "<td>" + table.rows[r].cells[c].innerHTML + "</td>";
+                    }
+                    str = str + "</tr>";
+                    newrow.innerHTML = str;
+                }
+
+            }
+        }
+        else if(domain[0] == 3)
+        {
+            var table = document.getElementById("studentlist1");
+            for (var r = 0, n = table.rows.length; r < n; r++)
+            {
+
+                var hide = table.rows[r].cells[5].innerHTML;
+                if(word == hide)
+                {
+                    var newrow = tbody.insertRow();
+                    var str = "<tr>";
+                    for(var c=0, m = table.rows[r].cells.length; c < m; c++)
+                    {
+                        str = str + "<td>" + table.rows[r].cells[c].innerHTML + "</td>";
+                    }
+                    str = str + "</tr>";
+                    newrow.innerHTML = str;
+                }
+
+            }
+        }
+    }
+
+
+
+</script>
+
+
+
+<script>
+    var api = "webapi/student";
+    $.get(api, function (student, status) {
+        if (status == "success") {
+            var student_data_body = "";
+            for (var i = 0; i < student.length; i++) {
+
+                student_data_body += '<tr>'
+
+                    + '<td>' + student[i].fname + '</td>'
+                    + '<td>' + student[i].lname + '</td>'
+                    + '<td>' + student[i].rollno + '</td>'
+                    + '<td>' + student[i].discipline + '</td>'
+                    + '<td>' + student[i].branch + '</td>'
+                    + '<td>' + student[i].specialization + '</td>'
+
+                    + '</tr>';
+            }
+            $('#studentlist1-tbody').html(student_data_body);
+        }
+
+    });
+
+
+</script>
+</body>
+</html>
